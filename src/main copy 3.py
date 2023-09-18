@@ -24,11 +24,14 @@ headers = {
 # }
 params = {
     'time_range' : 'medium_term',
-    'limit' : 10,
+    'limit' : 1,
     'offset' : 5
 }
 
-response = json.loads(requests.get(base_url+"audio-analysis/21YxK0klhpfLW8budkJaMF", headers=headers, params=params).content)
+response = json.loads(
+    requests.get(
+        base_url+"audio-features/21YxK0klhpfLW8budkJaMF", 
+        headers=headers, params=params).content)
 
 
 if response:
