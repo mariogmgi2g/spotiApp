@@ -28,19 +28,19 @@ class SpotyParser:
             'top n artists', 'top n genres', 'top n tracks', 
             'top n tracks artists']
         if query_key == 'top n artists':
-            (url_char, params) = SpotyParser.__query_top_artists(args[0], 5)
+            (url_char, params) = SpotyParser.__query_top_artists(args[0], 0)
             response = self.__url_builder(url_char, params)
             response = SpotyParser.__get_top_artist(response)
         elif query_key == 'top n genres':
-            (url_char, params) = SpotyParser.__query_top_artists(10, 5)
+            (url_char, params) = SpotyParser.__query_top_artists(10, 0)
             response = self.__url_builder(url_char, params)
             response = SpotyParser.__get_top_m_genres(response, args[0])
         elif query_key == 'top n tracks':
-            (url_char, params) = SpotyParser.__query_top_tracks(args[0], 5)
+            (url_char, params) = SpotyParser.__query_top_tracks(args[0], 0)
             response = self.__url_builder(url_char, params)
             response = SpotyParser.__get_top_tracks(response)
         elif query_key == 'top n tracks artists':
-            (url_char, params) = SpotyParser.__query_top_tracks(args[0], 5)
+            (url_char, params) = SpotyParser.__query_top_tracks(args[0], 0)
             response = self.__url_builder(url_char, params)
             response = SpotyParser.__get_top_tracks_artists(response)
         else: 
