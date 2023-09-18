@@ -26,7 +26,8 @@ class SpotyParser:
     def query(self, query_key:str, *args) -> dict:
         implemented_query_keys = [
             'top n artists', 'top n genres', 'top n tracks', 
-            'top n tracks artists', 'playlist tracks', 'track features']
+            'top n tracks artists', 'playlist tracks', 'track features',
+            'track features from playlist']
 
         if query_key == 'top n artists':
             (url_char, params) = SpotyParser.__query_top_artists(args[0], 0)
@@ -52,6 +53,19 @@ class SpotyParser:
             (url_char, params) = SpotyParser.__query_track_features(args[0])
             response = self.__url_builder(url_char, params)
             response = SpotyParser.__get_track_features(response)
+        elif query_key == 'track features from playlist':
+            playlist_id = args[0]
+            # Se obtienen las canciones
+            (url_char, params) = SpotyParser.__query_playlist_tracks(playlist_id)
+            tracks_response = self.__url_builder(url_char, params)
+            tracks = SpotyParser.__get_playlist_tracks(tracks_response)
+            dict_response = {}
+            # Se obtienen las características de las canciones
+            for key in tracks.keys():
+                (url_char, params) = SpotyParser.__query_track_features(tracks[key])
+                response = self.__url_builder(url_char, params)
+                response = SpotyParser.__get_track_features(response)
+                dict_response[key] = response
         else: 
             raise ValueError(
                 f"La instrucción no se encuentra entre aquellas implementadas, \
@@ -146,6 +160,7 @@ class SpotyParser:
         }
         return (url_char, params)
     
+
     def __get_playlist_tracks(response:dict):
         id_tracks = (response["tracks"]["items"][0])
         id_tracks = {response["tracks"]["items"][i]["track"]["name"]: response["tracks"]["items"][i]["track"]["href"].split("/")[-1] for i in range(len(response["tracks"]["items"]))}
