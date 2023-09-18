@@ -9,7 +9,7 @@ import pandas as pd
 #   -> top n genres
 #   -> top n tracks
 #   -> top n tracks artists
-#   -> 
+#   -> track features
 #   -> 
 
 class SpotyParser:
@@ -26,7 +26,7 @@ class SpotyParser:
     def query(self, query_key:str, *args) -> dict:
         implemented_query_keys = [
             'top n artists', 'top n genres', 'top n tracks', 
-            'top n tracks artists']
+            'top n tracks artists', 'track features']
         if query_key == 'top n artists':
             (url_char, params) = SpotyParser.__query_top_artists(args[0], 0)
             response = self.__url_builder(url_char, params)
@@ -43,6 +43,10 @@ class SpotyParser:
             (url_char, params) = SpotyParser.__query_top_tracks(args[0], 0)
             response = self.__url_builder(url_char, params)
             response = SpotyParser.__get_top_tracks_artists(response)
+        elif query_key == 'track features':
+            (url_char, params) = SpotyParser.__query_track_features(args[0])
+            response = self.__url_builder(url_char, params)
+            response = SpotyParser.__get_track_features(response)
         else: 
             raise ValueError(
                 f"La instrucción no se encuentra entre aquellas implementadas, \
@@ -114,3 +118,26 @@ class SpotyParser:
         return dict_artists
 
     # --------------------------------------------------------------------------
+    def __query_track_features(id_track:str) -> tuple:
+        url_char = "audio-features/" + id_track
+
+        params = {
+            'time_range' : 'medium_term',
+            'limit' : 10,
+            'offset' : 0
+        }
+        return (url_char, params)
+    
+    
+    def __get_track_features(response) -> dict:
+        features_of_interest = [
+            'tempo', 'acousticness', 'danceability', 'energy', 
+            'instrumentalness', 'liveness', 'loudness', 'valence']
+        response2 = {
+            key: response[key] 
+            for key in response.keys() 
+            if key in features_of_interest}
+        return response2
+    
+    # --------------------------------------------------------------------------
+    
