@@ -1,3 +1,3 @@
 from spoty_parser import SpotyParser
 querier = SpotyParser()
-print(querier.query('top n artists', 10))
+print(querier.query('playlist tracks', '37i9dQZF1DWWGFQLoP9qlv'))
